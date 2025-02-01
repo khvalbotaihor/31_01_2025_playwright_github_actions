@@ -2,7 +2,9 @@
   "name": "31_01_2025_playwright_github_actions",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
