@@ -45,8 +45,8 @@ jobs:
         git add .
         git commit -m "Add Playwright test report"
 
-        # Set the remote URL for GitHub repository
-        git remote add origin https://github.com/${{ github.repository }}.git
+        # Set the remote URL for GitHub repository (use GITHUB_TOKEN for authentication)
+        git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
         # Create and switch to the gh-pages branch
         git checkout -b gh-pages
