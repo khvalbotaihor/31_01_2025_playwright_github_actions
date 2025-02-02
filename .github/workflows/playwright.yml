@@ -45,8 +45,11 @@ jobs:
         git add .
         git commit -m "Add Playwright test report"
 
-        # Check if remote exists, and if so, update the URL
-        git remote set-url origin https://github.com/${{ github.repository }}.git || git remote add origin https://github.com/${{ github.repository }}.git
+        # Set the remote URL for GitHub repository
+        git remote add origin https://github.com/${{ github.repository }}.git
+
+        # Create and switch to the gh-pages branch
+        git checkout -b gh-pages
 
         # Push the commit to the gh-pages branch (force push)
         git push --force --set-upstream origin gh-pages
