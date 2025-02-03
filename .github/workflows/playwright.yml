@@ -37,12 +37,13 @@ jobs:
     - name: Gather all test reports
       run: |
         # Create a folder to store all reports if it doesn't exist
-        mkdir -p gh-pages/reports
+        mkdir -p gh-pages/reports/${{ github.run_id }}
         
         # Copy the renamed report into the reports folder, appending it without replacing
         cp -r playwright-report/* gh-pages/reports/${{ github.run_id }}/
         
-        # Copy the generated report to a new file for future reference
+        # Copy the generated report to a new file for future reference (latest folder)
+        mkdir -p gh-pages/reports/latest
         cp -r gh-pages/reports/${{ github.run_id }}/* gh-pages/reports/latest/
 
     - name: Push Playwright report to GitHub Pages
