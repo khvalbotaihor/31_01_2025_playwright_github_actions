@@ -5,13 +5,14 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  maxFailures: 100000,
+  maxFailures: Infinity,
   workers: 5,
   reporter: 'html',
   use: {
-  trace: 'on-first-retry',
+    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'on-first-retry'
+    video: 'on-first-retry',
+
   },
 
   projects: [
