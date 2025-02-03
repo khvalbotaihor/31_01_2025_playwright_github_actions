@@ -28,13 +28,30 @@ jobs:
       run: npx playwright test
       continue-on-error: true  # Ensures the job doesn't stop if there are failures
 
+    - name: Rename index.html with build number
+      run: |
+        # Rename the index.html file with the build number (or GitHub run ID)
+        BUILD_NUMBER=${{ github.run_id }}
+        mv playwright-report/index.html playwright-report/${BUILD_NUMBER}.html
+
+    - name: Gather all test reports
+      run: |
+        # Create a folder to store all reports if it doesn't exist
+        mkdir -p gh-pages/reports
+        
+        # Copy the renamed report into the reports folder, appending it without replacing
+        cp -r playwright-report/* gh-pages/reports/${{ github.run_id }}/
+        
+        # Copy the generated report to a new file for future reference
+        cp -r gh-pages/reports/${{ github.run_id }}/* gh-pages/reports/latest/
+
     - name: Push Playwright report to GitHub Pages
       run: |
         # Create a new directory for GitHub Pages
         mkdir gh-pages
         
-        # Copy the test report files into that directory
-        cp -r playwright-report/* gh-pages/
+        # Copy all the test reports into that directory
+        cp -r gh-pages/reports/* gh-pages/
 
         # Set GitHub Actions as the committer
         git config --global user.name "GitHub Actions"
