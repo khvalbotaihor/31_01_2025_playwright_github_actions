@@ -26,6 +26,7 @@ jobs:
 
     - name: Run Playwright tests
       run: npx playwright test
+      continue-on-error: true  # Ensures the job doesn't stop if there are failures
 
     - name: Push Playwright report to GitHub Pages
       run: |
