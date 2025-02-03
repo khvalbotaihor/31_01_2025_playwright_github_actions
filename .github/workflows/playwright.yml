@@ -42,9 +42,12 @@ jobs:
         # Copy the renamed report into the reports folder, appending it without replacing
         cp -r playwright-report/* gh-pages/reports/${{ github.run_id }}/
         
+        # Rename the report to index.html
+        mv gh-pages/reports/${{ github.run_id }}/${{ github.run_id }}.html gh-pages/reports/${{ github.run_id }}/index.html
+        
         # Copy the generated report to a new file for future reference (latest folder)
         mkdir -p gh-pages/reports/latest
-        cp -r gh-pages/reports/${{ github.run_id }}/* gh-pages/reports/latest/
+        cp -r gh-pages/reports/${{ github.run_id }}/index.html gh-pages/reports/latest/
 
     - name: Push Playwright report to GitHub Pages
       run: |
