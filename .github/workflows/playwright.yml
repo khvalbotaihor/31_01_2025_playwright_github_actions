@@ -48,8 +48,8 @@ jobs:
 
     - name: Push Playwright report to GitHub Pages
       run: |
-        # Create a new directory for GitHub Pages
-        mkdir gh-pages
+        # Create a new directory for GitHub Pages if it doesn't exist
+        mkdir -p gh-pages
         
         # Copy all the test reports into that directory
         cp -r gh-pages/reports/* gh-pages/
