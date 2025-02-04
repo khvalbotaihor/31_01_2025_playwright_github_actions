@@ -40,50 +40,36 @@ jobs:
     - name: Rename HTML report to report.html
       run: |
         BUILD_NUMBER=${{ github.run_id }}
-        mkdir -p reports/${BUILD_NUMBER}
+        mkdir -p gh-pages/reports/${BUILD_NUMBER}
 
         # Rename Playwright HTML report to avoid conflicts
-        mv playwright-report/index.html reports/${BUILD_NUMBER}/report.html
+        mv playwright-report/index.html gh-pages/reports/${BUILD_NUMBER}/report.html
 
         # Move Allure report (keep it as index.html)
-        mv allure-report/* reports/${BUILD_NUMBER}/
+        mv allure-report/* gh-pages/reports/${BUILD_NUMBER}/
 
     - name: Commit and push reports to GitHub Pages
       run: |
-        cd $GITHUB_WORKSPACE
-
-        # Initialize git if it's not already initialized
-        git init
-
+        cd gh-pages
+        
+        # Fetch the latest gh-pages branch
+        git fetch origin gh-pages
+        
+        # Checkout the gh-pages branch (ensure we are on it)
+        git checkout gh-pages
+        
         # Configure GitHub Actions identity
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
 
-        # Remove any existing remote (if it exists) before adding the correct one
-        git remote remove origin || true
-
-        # Add the new remote for GitHub Pages
-        git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-        # Add all the files under reports
-        git add reports/
+        # Add the new report folder (build folder)
+        git add reports/${{ github.run_id }}
 
         # Commit the changes (new report folder)
-        git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}" || echo "No changes to commit"
+        git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}"
 
-        # If there are changes, push to GitHub Pages
-        if [[ $(git status --porcelain) ]]; then
-          echo "Changes detected, pushing to GitHub Pages"
-          
-          # Fetch and checkout the gh-pages branch (create if not exists)
-          git fetch origin
-          git checkout gh-pages || git checkout -b gh-pages
-
-          # Push the changes to the gh-pages branch
-          git push origin gh-pages --force
-        else
-          echo "No changes to push"
-        fi
+        # Push the changes to the gh-pages branch
+        git push origin gh-pages --force
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
