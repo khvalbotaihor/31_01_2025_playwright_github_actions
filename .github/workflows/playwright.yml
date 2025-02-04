@@ -24,56 +24,44 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    - name: Install Allure Commandline
+      run: npm install -g allure-commandline --save-dev
+
     - name: Run Playwright tests
       run: npx playwright test
       continue-on-error: true  # Ensures the job doesn't stop if there are failures
 
+    - name: Generate Allure report
+      run: allure generate ./allure-results --clean -o ./allure-report
+
     - name: Rename index.html with build number
       run: |
-        # Rename the index.html file with the build number (or GitHub run ID)
         BUILD_NUMBER=${{ github.run_id }}
-        mv playwright-report/index.html playwright-report/${BUILD_NUMBER}.html
+        mv allure-report/index.html allure-report/${BUILD_NUMBER}.html
 
     - name: Gather all test reports
       run: |
-        # Create a folder to store all reports if it doesn't exist
         mkdir -p gh-pages/reports/${{ github.run_id }}
-        
-        # Copy the renamed report into the reports folder, appending it without replacing
-        cp -r playwright-report/* gh-pages/reports/${{ github.run_id }}/
-        
-        # Rename the report to index.html
-        mv gh-pages/reports/${{ github.run_id }}/${{ github.run_id }}.html gh-pages/reports/${{ github.run_id }}/index.html
-        
-        # Copy the generated report to a new file for future reference (latest folder)
+        cp -r allure-report/* gh-pages/reports/${{ github.run_id }}/
+        mv gh-pages/reports/${{ github.run_id }}/index.html gh-pages/reports/${{ github.run_id }}/index.html
         mkdir -p gh-pages/reports/latest
         cp -r gh-pages/reports/${{ github.run_id }}/index.html gh-pages/reports/latest/
 
     - name: Push Playwright report to GitHub Pages
       run: |
-        # Create a new directory for GitHub Pages if it doesn't exist
         mkdir -p gh-pages
-        
-        # Copy all the test reports into that directory
         cp -r gh-pages/reports/* gh-pages/
 
-        # Set GitHub Actions as the committer
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
 
-        # Initialize a new Git repository in the gh-pages directory
         cd gh-pages
         git init
         git add .
         git commit -m "Add Playwright test report"
 
-        # Set the remote URL for GitHub repository (use GITHUB_TOKEN for authentication)
         git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-        # Create and switch to the gh-pages branch
         git checkout -b gh-pages
-
-        # Push the commit to the gh-pages branch (force push)
         git push --force --set-upstream origin gh-pages
 
       env:

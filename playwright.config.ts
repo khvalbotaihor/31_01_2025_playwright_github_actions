@@ -7,8 +7,11 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   maxFailures: Infinity,
   workers: 5,
-  reporter: 'html',
-  use: {
+  reporter: [
+    ['html'], // Keep HTML reporter for visibility
+    ['allure-playwright'], // Add allure-playwright reporter
+  ],
+    use: {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'on-first-retry',
