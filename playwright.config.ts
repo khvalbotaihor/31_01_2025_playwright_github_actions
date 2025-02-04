@@ -9,9 +9,12 @@ export default defineConfig({
   workers: 5,
   reporter: [
     ['html'], // Keep HTML reporter for visibility
-    ['allure-playwright'], // Add allure-playwright reporter
+    ['allure-playwright', {
+      outputFolder: './allure-results', // Ensure results are saved in this folder
+      details: true, // Provide detailed information in the Allure report
+    }],
   ],
-    use: {
+  use: {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'on-first-retry',
