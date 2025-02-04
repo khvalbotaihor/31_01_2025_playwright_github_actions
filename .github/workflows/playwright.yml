@@ -40,7 +40,7 @@ jobs:
     - name: Rename HTML report to report.html
       run: |
         BUILD_NUMBER=${{ github.run_id }}
-        mkdir -p gh-pages/reports/${BUILD_NUMBER}
+        mkdir -p reports/${BUILD_NUMBER}
 
         # Rename Playwright HTML report to avoid conflicts
         mv playwright-report/index.html reports/${BUILD_NUMBER}/report.html
