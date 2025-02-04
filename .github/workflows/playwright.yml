@@ -48,24 +48,22 @@ jobs:
         # Move Allure report (keep it as index.html)
         mv allure-report/* gh-pages/reports/${BUILD_NUMBER}/
 
-    - name: Gather all test reports
+    - name: Push reports to GitHub Pages
       run: |
-        mkdir -p gh-pages/reports/${{ github.run_id }}
-        cp -r gh-pages/reports/${{ github.run_id }}/index.html gh-pages/reports/latest/
-        cp -r gh-pages/reports/${{ github.run_id }}/report.html gh-pages/reports/latest/
+        # Ensure the reports folder exists
+        mkdir -p gh-pages/reports
 
-    - name: Push Playwright and Allure reports to GitHub Pages
-      run: |
-        mkdir -p gh-pages
-        cp -r gh-pages/reports/* gh-pages/
+        # Copy the build-specific folder to the reports directory
+        cp -r gh-pages/reports/${{ github.run_id }} gh-pages/reports/
 
+        # Commit and push the reports
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
 
         cd gh-pages
         git init
         git add .
-        git commit -m "Add Playwright and Allure test reports"
+        git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}"
 
         git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git checkout -b gh-pages
