@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","6045","has title","webkit","Tue Feb 04 21:18:46 UTC 2025","failed","Tue Feb 04 21:18:52 UTC 2025","","example.spec.ts","",""
+"","4247","get started link","firefox","Tue Feb 04 21:18:29 UTC 2025","passed","Tue Feb 04 21:18:33 UTC 2025","","example.spec.ts","",""
+"","6036","has title","chromium","Tue Feb 04 21:18:45 UTC 2025","failed","Tue Feb 04 21:18:51 UTC 2025","","example.spec.ts","",""
+"","1525","get started link","chromium","Tue Feb 04 21:18:29 UTC 2025","passed","Tue Feb 04 21:18:30 UTC 2025","","example.spec.ts","",""
+"","6524","has title","firefox","Tue Feb 04 21:18:50 UTC 2025","failed","Tue Feb 04 21:18:56 UTC 2025","","example.spec.ts","",""
+"","6446","get started link","webkit","Tue Feb 04 21:18:31 UTC 2025","passed","Tue Feb 04 21:18:38 UTC 2025","","example.spec.ts","",""
