@@ -48,9 +48,10 @@ jobs:
         # Move Allure report (keep it as index.html)
         mv allure-report/* reports/${BUILD_NUMBER}/
 
-    - name: Check reports directory contents
+    - name: Debug reports directory
       run: |
-        ls -l reports/${{ github.run_id }}  # Debugging step to check folder contents
+        echo "Listing the contents of reports directory"
+        ls -R reports  # List all contents in the reports folder to debug
 
     - name: Commit and push reports to GitHub Pages
       run: |
@@ -83,7 +84,7 @@ jobs:
           git fetch origin
           git checkout gh-pages || git checkout -b gh-pages
 
-          # Copy the reports folder to the root directory
+          # Copy the reports folder to the root directory (flattening the folder structure)
           cp -r reports/${{ github.run_id }}/* .
 
           # Push the changes to the gh-pages branch
