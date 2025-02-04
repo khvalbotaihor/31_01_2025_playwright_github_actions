@@ -49,9 +49,7 @@ jobs:
         mv allure-report/* reports/${BUILD_NUMBER}/
 
     - name: Commit and push reports to GitHub Pages
-      run: |
-        cd gh-pages
-        
+      run: |        
         # Fetch the latest gh-pages branch
         git fetch origin gh-pages
         
