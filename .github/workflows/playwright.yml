@@ -48,9 +48,13 @@ jobs:
         # Move Allure report (keep it as index.html)
         mv allure-report/* reports/${BUILD_NUMBER}/
 
+    - name: Check reports directory contents
+      run: |
+        ls -l reports/${{ github.run_id }}  # Debugging step to check folder contents
+
     - name: Commit and push reports to GitHub Pages
       run: |
-        cd $GITHUB_WORKSPACE  # Ensure we're in the root of the repository
+        cd $GITHUB_WORKSPACE
 
         # Initialize git if it's not already initialized
         git init
@@ -58,6 +62,12 @@ jobs:
         # Configure GitHub Actions identity
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
+
+        # Remove any existing remote (if it exists) before adding the correct one
+        git remote remove origin || true
+
+        # Add the new remote for GitHub Pages
+        git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
         # Add all the files under reports
         git add reports/${{ github.run_id }}
@@ -69,10 +79,6 @@ jobs:
         if [[ $(git status --porcelain) ]]; then
           echo "Changes detected, pushing to GitHub Pages"
           
-          # Add the remote for GitHub Pages
-          git remote remove origin || true  # Remove existing origin if present
-          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
           # Fetch and checkout the gh-pages branch (create if not exists)
           git fetch origin
           git checkout gh-pages || git checkout -b gh-pages
