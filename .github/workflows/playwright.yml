@@ -66,17 +66,24 @@ jobs:
         git add reports/${{ github.run_id }}
 
         # Commit the changes (new report folder)
-        git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}"
+        git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}" || echo "No changes to commit"
 
-        # Add the remote for GitHub Pages
-        git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        # If there are changes, push to GitHub Pages
+        if [[ $(git status --porcelain) ]]; then
+          echo "Changes detected, pushing to GitHub Pages"
+          
+          # Add the remote for GitHub Pages
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
-        # Make sure we're on the gh-pages branch
-        git fetch origin
-        git checkout gh-pages || git checkout -b gh-pages
+          # Fetch and checkout the gh-pages branch (create if not exists)
+          git fetch origin
+          git checkout gh-pages || git checkout -b gh-pages
 
-        # Push the changes to the gh-pages branch
-        git push origin gh-pages --force
+          # Push the changes to the gh-pages branch
+          git push origin gh-pages --force
+        else
+          echo "No changes to push"
+        fi
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
