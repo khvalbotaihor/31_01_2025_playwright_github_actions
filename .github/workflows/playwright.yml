@@ -41,9 +41,12 @@ jobs:
       run: |
         BUILD_NUMBER=${{ github.run_id }}
         mkdir -p gh-pages/reports/${BUILD_NUMBER}
-        mv playwright-report/index.html gh-pages/reports/${BUILD_NUMBER}/report.html  # Rename index.html to report.html
+
+        # Rename Playwright HTML report to avoid conflicts
+        mv playwright-report/index.html gh-pages/reports/${BUILD_NUMBER}/report.html
+
+        # Move Allure report (keep it as index.html)
         mv allure-report/* gh-pages/reports/${BUILD_NUMBER}/
-        mv gh-pages/reports/${BUILD_NUMBER}/index.html gh-pages/reports/${BUILD_NUMBER}/index.html
 
     - name: Gather all test reports
       run: |
