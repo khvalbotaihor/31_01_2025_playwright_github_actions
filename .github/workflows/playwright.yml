@@ -40,35 +40,36 @@ jobs:
     - name: Rename HTML report to report.html
       run: |
         BUILD_NUMBER=${{ github.run_id }}
-        mkdir -p gh-pages/reports/${BUILD_NUMBER}
+        mkdir -p reports/${BUILD_NUMBER}
 
         # Rename Playwright HTML report to avoid conflicts
-        mv playwright-report/index.html gh-pages/reports/${BUILD_NUMBER}/report.html
+        mv playwright-report/index.html reports/${BUILD_NUMBER}/report.html
 
         # Move Allure report (keep it as index.html)
-        mv allure-report/* gh-pages/reports/${BUILD_NUMBER}/
+        mv allure-report/* reports/${BUILD_NUMBER}/
 
     - name: Commit and push reports to GitHub Pages
       run: |
-        cd gh-pages
+        # Ensure we're in the repository's root directory
+        cd $GITHUB_WORKSPACE
         
-        # Fetch the latest gh-pages branch
-        git fetch origin gh-pages
-        
-        # Checkout the gh-pages branch (ensure we are on it)
-        git checkout gh-pages
-        
-        # Configure GitHub Actions identity
+        # Initialize git and configure GitHub Actions identity
+        git init
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
 
-        # Add the new report folder (build folder)
+        # Add the new report folder (build folder) to be committed
         git add reports/${{ github.run_id }}
 
-        # Commit the changes (new report folder)
+        # Commit the new report folder
         git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}"
 
+        # Set the GitHub Pages remote repository
+        git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
         # Push the changes to the gh-pages branch
+        git fetch origin
+        git checkout gh-pages || git checkout --orphan gh-pages
         git push origin gh-pages --force
 
       env:
