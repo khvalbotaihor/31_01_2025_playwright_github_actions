@@ -37,18 +37,19 @@ jobs:
     - name: Generate Allure report
       run: allure generate ./allure-results --clean -o ./allure-report
 
-    - name: Rename Allure report with build number
+    - name: Rename HTML report to report.html
       run: |
         BUILD_NUMBER=${{ github.run_id }}
         mkdir -p gh-pages/reports/${BUILD_NUMBER}
+        mv playwright-report/index.html gh-pages/reports/${BUILD_NUMBER}/report.html  # Rename index.html to report.html
         mv allure-report/* gh-pages/reports/${BUILD_NUMBER}/
         mv gh-pages/reports/${BUILD_NUMBER}/index.html gh-pages/reports/${BUILD_NUMBER}/index.html
 
     - name: Gather all test reports
       run: |
         mkdir -p gh-pages/reports/${{ github.run_id }}
-        cp -r playwright-report/* gh-pages/reports/${{ github.run_id }}/
         cp -r gh-pages/reports/${{ github.run_id }}/index.html gh-pages/reports/latest/
+        cp -r gh-pages/reports/${{ github.run_id }}/report.html gh-pages/reports/latest/
 
     - name: Push Playwright and Allure reports to GitHub Pages
       run: |
