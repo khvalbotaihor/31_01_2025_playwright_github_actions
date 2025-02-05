@@ -48,6 +48,9 @@ jobs:
         # Move Allure report (keep it as index.html)
         mv allure-report/* reports/${BUILD_NUMBER}/
 
+        # Move JUnit report to the reports directory
+        mv test-results/results.xml reports/${BUILD_NUMBER}/results.xml
+
     - name: Commit and push reports to GitHub Pages
       run: |        
         # Fetch the latest gh-pages branch
@@ -64,7 +67,7 @@ jobs:
         git add reports/${{ github.run_id }}
 
         # Commit the changes (new report folder)
-        git commit -m "Add Playwright and Allure test reports for build ${{ github.run_id }}"
+        git commit -m "Add Playwright, Allure, and JUnit test reports for build ${{ github.run_id }}"
 
         # Push the changes to the gh-pages branch
         git push origin gh-pages --force
