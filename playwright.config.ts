@@ -13,6 +13,10 @@ export default defineConfig({
       outputFolder: './allure-results', // Ensure results are saved in this folder
       details: true, // Provide detailed information in the Allure report
     }],
+    ['junit', {
+      outputFile: './test-results/results.xml', // Path where the JUnit XML will be saved
+      suiteName: 'Playwright Test Suite', // Suite name (optional)
+    }],
   ],
   use: {
     trace: 'on-first-retry',
